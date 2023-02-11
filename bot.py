@@ -90,8 +90,8 @@ async def on_ready():
             activity=nextcord.Game("뭔가를 안")
         )
 
-    print('Bot is ready!')
-
+    channel=bot.get_channel(ip.manage_channel_id)
+    await channel.send(f"봇 켜짐 <@{ip.ownerid}>")
     
         
 
@@ -173,10 +173,12 @@ async def write(ctx, mode:str, content=None):
 
 # Define the job to be run at 6:00 AM every day
 async def job():
-    channel=bot.get_channel(ip.channelid)
+    channel=bot.get_channel(ip.public_channel_id)
     ctime=arrow.now("Asia/Seoul")
     ctime=ctime.datetime
-    await channel.send(f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일")
+    wd=("월","화","수","목","금","토","일")
+    send_str=f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일 {wd[ctime.weekday()]}요일"
+    await channel.send(send_str)
 
 async def change_second(dm,ds,activity):
 
