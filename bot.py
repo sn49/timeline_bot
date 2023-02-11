@@ -5,7 +5,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 import arrow
-from pypresence import Presence
 from datetime import datetime
 import pytz
 import asyncio
