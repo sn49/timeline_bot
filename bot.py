@@ -136,7 +136,7 @@ async def write(ctx, mode:str, content=None):
         await bot.change_presence(
             activity=nextcord.Game(f"{content} {dm}분 {ds}초 동안 하는중")
         )
-
+        jb.stopValue=0
         await ctx.send(f"{content} 시작함")
         await asyncio.sleep(3)
         while jb.stopValue==0:
