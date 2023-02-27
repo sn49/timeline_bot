@@ -9,6 +9,8 @@ from datetime import datetime
 import pytz
 import asyncio
 from secret import important
+import requests
+import json
 
 ip=important.important
 
@@ -83,11 +85,15 @@ async def on_ready():
 
         while jb.stopValue==0:
             dm,ds = await change_second(dm,ds,row_value[3])
-            await asyncio.sleep(3)
+            await asyncio.sleep(10)
     else:
         await bot.change_presence(
             activity=nextcord.Game("뭔가를 안")
         )
+
+
+
+
 
     channel=bot.get_channel(ip.manage_channel_id)
     await channel.send(f"봇 켜짐 <@{ip.ownerid}>")
@@ -138,10 +144,10 @@ async def write(ctx, mode:str, content=None):
         )
         jb.stopValue=0
         await ctx.send(f"{content} 시작함")
-        await asyncio.sleep(3)
+        await asyncio.sleep(10)
         while jb.stopValue==0:
             dm,ds = await change_second(dm,ds,content)
-            await asyncio.sleep(3)
+            await asyncio.sleep(10)
 
 
     elif mode.lower()=="end":
@@ -176,7 +182,20 @@ async def job():
     ctime=arrow.now("Asia/Seoul")
     ctime=ctime.datetime
     wd=("월","화","수","목","금","토","일")
-    send_str=f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일 {wd[ctime.weekday()]}요일"
+    data_datetime = ctime - datetime.timedelta(days=1)
+
+    url=f'{ip.peer_greed_link}/{data_datetime.year}-{data_datetime.month}-{data_datetime.day}'
+
+    print(url)
+
+    response=requests.get(url,headers={"user-agent":ip.user_agent}).text
+
+
+    response=json.loads(response)
+
+    
+
+    send_str=f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일 {wd[ctime.weekday()]}요일\n\ncnn 탐욕과 욕망 지수 : {response['fear_and_greed']['score']}\n비트코인 탐욕과 욕망 지수\nhttps://alternative.me/crypto/fear-and-greed-index.png"
     await channel.send(send_str)
 
 async def change_second(dm,ds,activity):
@@ -192,6 +211,11 @@ async def change_second(dm,ds,activity):
         activity=nextcord.Game(f"{activity} {dm}분 {ds}초 동안 하는중")
     )
 
+    user = await bot.get_user(f"{ip.ownerid}")
+
+    if ds>=0 and ds<10 and dm%20==0:
+        await user.send(f"{activity}를 {dm}분동안 지속하였습니다. 만약 아니라면 끝내기를 해주세요.")
+
     return dm,ds
 
 
@@ -199,7 +223,7 @@ async def change_second(dm,ds,activity):
 
 # Schedule the job with the AsyncIOScheduler    
 scheduler = AsyncIOScheduler()
-scheduler.add_job(job, 'cron', hour=6, minute=0)
+scheduler.add_job(job, 'cron', hour=6, minute=30)
 scheduler.start()
 
 
