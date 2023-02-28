@@ -176,7 +176,11 @@ async def write(ctx, mode:str, content=None):
         )
         
 
+
+
+
 # Define the job to be run at 6:00 AM every day
+@bot.command()
 async def job():
     channel=bot.get_channel(ip.public_channel_id)
     ctime=arrow.now("Asia/Seoul")
