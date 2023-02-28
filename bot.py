@@ -3,7 +3,7 @@ from nextcord.ext import commands
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import datetime
+from datetime import timedelta
 import arrow
 from datetime import datetime
 import pytz
@@ -189,7 +189,7 @@ async def job():
     ctime=arrow.now("Asia/Seoul")
     ctime=ctime.datetime
     wd=("월","화","수","목","금","토","일")
-    data_datetime = ctime - datetime.timedelta(days=1)
+    data_datetime = ctime - timedelta(days=1)
 
     url=f'{ip.peer_greed_link}/{data_datetime.year}-{data_datetime.month}-{data_datetime.day}'
 
