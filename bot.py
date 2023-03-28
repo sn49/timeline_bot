@@ -196,13 +196,16 @@ async def job():
     print(url)
 
     response=requests.get(url,headers={"user-agent":ip.user_agent}).text
+    cnnfng=json.loads(response)
 
+    url='''https://api.alternative.me/fng/'''
 
-    response=json.loads(response)
+    response=requests.get(url).text
+    cryptofng=json.loads(response)
 
-    
+    print(cryptofng)
 
-    send_str=f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일 {wd[ctime.weekday()]}요일\n\ncnn 탐욕과 욕망 지수 : {response['fear_and_greed']['score']}\n비트코인 탐욕과 욕망 지수\nhttps://alternative.me/crypto/fear-and-greed-index.png"
+    send_str=f"오늘은 {ctime.year}년 {ctime.month}월 {ctime.day}일 {wd[ctime.weekday()]}요일\n\ncnn 탐욕과 욕망 지수 : {cnnfng['fear_and_greed']['score']}\n비트코인 탐욕과 욕망 지수 : {cryptofng['data'][0]['value']}"
     await channel.send(send_str)
 
 async def change_second(dm,ds,activity):
